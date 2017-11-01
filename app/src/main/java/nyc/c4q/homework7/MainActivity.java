@@ -150,8 +150,6 @@ public class MainActivity extends AppCompatActivity {
             Log.e("running changed to", "" + running);
 
 
-
-
             //  }//end while loop running
 
         } else {
@@ -166,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void oncheck(View view) {
+    public void clickCheck(View view) {
 
         switch (view.getId()) {
             case R.id.red:
@@ -183,24 +181,15 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
         }
-        Log.e("on check bee called","now");
-        if(arrayListXvALUE.equals(userChoiceList)){
+        Log.e("on check bee called", "now");
+       if (arrayListXvALUE.equals(userChoiceList)) {
             Toast.makeText(this, "Great jobe , Click for Next", Toast.LENGTH_SHORT).show();
-        }else{
+        } else {
             Toast.makeText(this, "not good", Toast.LENGTH_SHORT).show();
         }
 
 
-
-
     }
-
-
-
-
-
-
-
 
 
 //
