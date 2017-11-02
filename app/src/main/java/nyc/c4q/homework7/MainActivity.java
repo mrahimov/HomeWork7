@@ -12,30 +12,39 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.Scanner;
-
 
 public class MainActivity extends AppCompatActivity {
-    Button red, blue, green, yellow, play;
-    TextView score, bestScore, level;
-    Button[] color;
-    boolean running = false;
-    int buttonTag = 1;
-    int count;
-
-    AlphaAnimation animation;
+    private Button red, blue, green, yellow, play;
+    private TextView score, bestScore, level;
+    private Button[] color;
+    private boolean running;
+    private int buttonTag = 1;
+    private int count = 1;
+    AlphaAnimation animation = new AlphaAnimation(1f, 0f);
     int x;
     Random random;
     ArrayList<Integer> arrayListXvALUE;
     ArrayList<Integer> userChoiceList;
-
     Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //identifate the button
+        setupview();
+        //storage the color inside the button
+        color = new Button[]{red, blue, green, yellow};
+        //Generate Random number to access to the color
+        random = new Random();
+        //storge the color in the sequence to use them later .
+        arrayListXvALUE = new ArrayList<>();
+        //storge the user choice to compare later with arryListXValue;
+        userChoiceList = new ArrayList<>();
+        //to flash the button
+        animation.setDuration(1000);
+    }
+
+    public void setupview() {
         red = (Button) findViewById(R.id.red);
         blue = (Button) findViewById(R.id.blue);
         green = (Button) findViewById(R.id.green);
@@ -47,47 +56,31 @@ public class MainActivity extends AppCompatActivity {
         //to start play or to stop
         play = (Button) findViewById(R.id.play);
         play.setTag(1);
-        //storage the color inside the button
-        color = new Button[]{red, blue, green, yellow};
-
-        //Generate Random number to access to the color
-        random = new Random();
-        //storge the color in the sequence to use them later .
-        arrayListXvALUE = new ArrayList<>();
-        userChoiceList = new ArrayList<>();
-
-
-        //to flash the button
-        animation = new AlphaAnimation(1f, 0f);
-        animation.setDuration(1000);
-
     }
-
 
     public void onplay(final View view) {
         buttonTag = (int) play.getTag();
         if (buttonTag == 1) {
             play.setTag(2);
-            //  red.startAnimation(animation);
             play.setText("Quit game");
-            running = true;
+            simon(view);
+        } else if (buttonTag == 2) {
+            play.setTag(1);
+            play.setText("play");
+            Toast.makeText(getBaseContext(), "Game Finsh: ", Toast.LENGTH_SHORT).show();
+        }
+    }
 
-
+    private void simon(View view) {
+        running = true;
+        while (running) {
             x = random.nextInt(4);  //Generate Random number
-
             arrayListXvALUE.add(x);
             Log.e("random number is", "" + x);  //Storage the Random number inside the ArrayList
-
-            count = 1;
-
             for (int value : arrayListXvALUE) {
                 Log.e("array list value is: ", "" + value);    //iterate through the ArrayList Value;
-
-
                 switch (color[value].getId()) {
                     case R.id.red:
-
-
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -96,12 +89,8 @@ public class MainActivity extends AppCompatActivity {
                             //  Toast.makeText(getBaseContext(), "Flash: " + finalJ, Toast.LENGTH_SHORT).show();
                         }, 2000 * count);
                         count++;
-
-
                         break;
                     case R.id.blue:
-
-
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -109,12 +98,9 @@ public class MainActivity extends AppCompatActivity {
                             }
                             //  Toast.makeText(getBaseContext(), "Flash: " + finalJ, Toast.LENGTH_SHORT).show();
                         }, 2000 * count);
-
                         count++;
                         break;
                     case R.id.green:
-
-
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -123,11 +109,8 @@ public class MainActivity extends AppCompatActivity {
                             //  Toast.makeText(getBaseContext(), "Flash: " + finalJ, Toast.LENGTH_SHORT).show();
                         }, 2000 * count);
                         count++;
-
                         break;
                     case R.id.yellow:
-
-
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -136,36 +119,17 @@ public class MainActivity extends AppCompatActivity {
                             //  Toast.makeText(getBaseContext(), "Flash: " + finalJ, Toast.LENGTH_SHORT).show();
                         }, 2000 * count);
                         count++;
-
                         break;
-
                 }
             }
-
-//                switch (view.getId()){
-//                    case R.id.
-//                }
-
-
+            running = false;
             Log.e("running changed to", "" + running);
-
-
-            //  }//end while loop running
-
-        } else {
-            if (buttonTag == 2) {
-                play.setTag(1);
-                play.setText("play");
-                running = false;
-
-                Toast.makeText(getBaseContext(), "Game Finsh: ", Toast.LENGTH_SHORT).show();
-            }
+            clickCheck(view);
         }
     }
 
-
     public void clickCheck(View view) {
-
+        boolean test = false;
         switch (view.getId()) {
             case R.id.red:
                 userChoiceList.add(0);
@@ -179,41 +143,22 @@ public class MainActivity extends AppCompatActivity {
             case R.id.yellow:
                 userChoiceList.add(3);
                 break;
-
         }
         Log.e("on check bee called", "now");
-       if (arrayListXvALUE.equals(userChoiceList)) {
-            Toast.makeText(this, "Great jobe , Click for Next", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "not good", Toast.LENGTH_SHORT).show();
+        Log.e("userChoiceLIST SIZE IS:", "" + userChoiceList.size());
+        if (arrayListXvALUE.size() == userChoiceList.size()) {
+            test = true;
+            Log.e("now both array are :", "" + test);
         }
-
-
+        if (test) {
+            if (arrayListXvALUE.equals(userChoiceList)) {
+                running = true;
+                simon(view);
+                Toast.makeText(this, "Great jobe , Click for Next", Toast.LENGTH_SHORT).show();
+            } else {
+                running = false;
+                Toast.makeText(this, "not good", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
-
-
-//
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
