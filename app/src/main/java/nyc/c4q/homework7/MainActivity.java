@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private int buttonTag;
     private int count = 1;
     private final String scoreNow = "scoreNow";
+    private final String arrayListKey = "arrayListKey";
     AlphaAnimation animation = new AlphaAnimation(1f, 0f);
     Random random;
     ArrayList<Integer> arrayListXvALUE;
@@ -60,7 +61,10 @@ public class MainActivity extends AppCompatActivity {
 
         //to flash the button
         if (savedInstanceState != null) {
+
             score.setText(savedInstanceState.getString(scoreNow));
+            level.setText(savedInstanceState.getString("level"));
+            arrayListXvALUE = savedInstanceState.getIntegerArrayList(arrayListKey);
 
         }
     }
@@ -83,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
             play.setTag(2);
             play.setText("Quit game");
             level.setText("Level 1");
-            simon(view);
+            simon();
             clickCheck(view);
             score.setText("");
         } else if (buttonTag == 2) {
@@ -95,8 +99,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void simon(View view) {
-
+    private void simon() {
 
         running = true;
         Random r = new Random();
@@ -185,12 +188,12 @@ public class MainActivity extends AppCompatActivity {
                 score.setText("" + userChoiceList.size());
                 level.setText("Level " + (userChoiceList.size() + 1));
                 running = true;
-                if(Integer.parseInt(bestScore.getText().toString())<userChoiceList.size()) {
+                if (Integer.parseInt(bestScore.getText().toString()) < userChoiceList.size()) {
                     editor.putString("best_score", (String.valueOf(userChoiceList.size()))).commit();
                     bestScore.setText(String.valueOf(userChoiceList.size()));
                 }
 
-                simon(view);
+                simon();
             } else {
                 quiteGame();
             }
@@ -200,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void quiteGame() {
         running = false;
-        Toast.makeText(this, "Game Over Yeah\n(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧!", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Game Over Yeah\n(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧Rusi!", Toast.LENGTH_LONG).show();
         gameOver.start();
         play.setTag(1);
         play.setText("play");
@@ -213,7 +216,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putString("scoreNow", score.getText().toString());
-        outState.putString("arrayListXvALUENOw", "" + arrayListXvALUE.size());
+        outState.putString("level", level.getText().toString());
+        outState.putIntegerArrayList("arrayListKey", arrayListXvALUE);
+        outState.putIntegerArrayList("userArr", userChoiceList);
         super.onSaveInstanceState(outState);
     }
 }
