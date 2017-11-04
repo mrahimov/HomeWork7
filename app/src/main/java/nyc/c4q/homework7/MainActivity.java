@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean running;
     private int buttonTag;
     private int count = 1;
+    private final String scoreNow="scoreNow";
     AlphaAnimation animation = new AlphaAnimation(1f, 0f);
     Random random;
     ArrayList<Integer> arrayListXvALUE;
@@ -39,7 +40,9 @@ public class MainActivity extends AppCompatActivity {
         arrayListXvALUE = new ArrayList<>();                   //storage the color in the sequence to use them later .
         userChoiceList = new ArrayList<>();                    //storage the user choice to compare later with arryListXValue;
         animation.setDuration(100);                            //to flash the button
-
+        if(savedInstanceState!=null){
+            score.setText(savedInstanceState.getString(scoreNow));
+        }
     }
 
     public void setupview() {
@@ -132,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
         userChoiceList.clear();
     }
 
+
     public void clickCheck(View view) {
         final MediaPlayer sound = MediaPlayer.create(this, R.raw.sound);
         switch (view.getId()) {
@@ -163,6 +167,8 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     running = false;
                     Toast.makeText(this, "Not Match,Game over", Toast.LENGTH_SHORT).show();
+                    final MediaPlayer gameOver = MediaPlayer.create(this, R.raw.gameover);
+                    gameOver.start();
                     play.setTag(1);
                     play.setText("play");
                     score.setText("");
@@ -170,4 +176,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString("scoreNow",score.getText().toString());
+        outState.putString("arrayListXvALUENOw",""+arrayListXvALUE.size());
+        super.onSaveInstanceState(outState);
+    }
     }
