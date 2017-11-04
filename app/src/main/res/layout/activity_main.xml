@@ -20,6 +20,7 @@
             android:layout_gravity="center"
             android:layout_margin="17dp"
             android:layout_weight="1"
+            android:hint="score"
             android:background="@color/white"
             android:gravity="center"
             android:textColor="@color/black"
@@ -27,22 +28,23 @@
 
         <TextView
             android:id="@+id/level"
-            android:layout_width="130dp"
+            android:layout_width="100dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
             android:layout_margin="17dp"
             android:gravity="center"
-            android:text="YOUR TURN"
             android:textColor="@color/colorPrimary"
-            android:textSize="20sp"
+            android:textSize="15sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/bestscore"
             android:layout_width="0dp"
             android:layout_height="40dp"
+            android:gravity="center"
             android:layout_gravity="center"
             android:layout_margin="17dp"
+            android:hint="best score"
             android:layout_weight="1"
             android:textColor="@color/black"
             android:background="@color/white" />

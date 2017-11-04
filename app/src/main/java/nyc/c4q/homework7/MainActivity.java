@@ -1,5 +1,6 @@
 package nyc.c4q.homework7;
 
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -24,24 +25,43 @@ public class MainActivity extends AppCompatActivity {
     private boolean running;
     private int buttonTag;
     private int count = 1;
-    private final String scoreNow="scoreNow";
+    private final String scoreNow = "scoreNow";
     AlphaAnimation animation = new AlphaAnimation(1f, 0f);
     Random random;
     ArrayList<Integer> arrayListXvALUE;
     ArrayList<Integer> userChoiceList;
+    private MediaPlayer gameOver;
+    private MediaPlayer mpGame;
+    private MediaPlayer sound;
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
+    String scoreBest = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setupview();
+        gameOver = MediaPlayer.create(this, R.raw.gameover);
+        mpGame = MediaPlayer.create(this, R.raw.game);
+        sound = MediaPlayer.create(this, R.raw.sound);
         color = new ImageButton[]{red, blue, green, yellow};        //storage the color inside the button
         random = new Random();                                 //Generate Random number to access to the color
         arrayListXvALUE = new ArrayList<>();                   //storage the color in the sequence to use them later .
         userChoiceList = new ArrayList<>();                    //storage the user choice to compare later with arryListXValue;
-        animation.setDuration(100);                            //to flash the button
-        if(savedInstanceState!=null){
+        animation.setDuration(100);
+
+        sharedPreferences = getSharedPreferences("simon_values", MODE_PRIVATE); //Acesss
+        editor = sharedPreferences.edit();  //Edit
+
+        scoreBest = sharedPreferences.getString("best_score", "0");//call back
+        bestScore.setText(scoreBest);
+
+        //to flash the button
+        if (savedInstanceState != null) {
             score.setText(savedInstanceState.getString(scoreNow));
+
         }
     }
 
@@ -62,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
         if (buttonTag == 1) {
             play.setTag(2);
             play.setText("Quit game");
+            level.setText("Level 1");
             simon(view);
             clickCheck(view);
             score.setText("");
@@ -75,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void simon(View view) {
-        final MediaPlayer mpGame = MediaPlayer.create(this, R.raw.game);
+
 
         running = true;
         Random r = new Random();
@@ -137,7 +158,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void clickCheck(View view) {
-        final MediaPlayer sound = MediaPlayer.create(this, R.raw.sound);
         switch (view.getId()) {
             case R.id.red:
                 userChoiceList.add(0);
@@ -159,27 +179,41 @@ public class MainActivity extends AppCompatActivity {
         Log.e("on check bee called", "now");
         Log.e("userChoiceLIST SIZE IS:", "" + userChoiceList.size());
         if (arrayListXvALUE.size() == userChoiceList.size()) {
-                if (arrayListXvALUE.equals(userChoiceList)) {
-                    Toast.makeText(this, "Great job , Next level: " + (userChoiceList.size() + 1), Toast.LENGTH_SHORT).show();
-                    score.setText("" + userChoiceList.size());
-                    running = true;
-                    simon(view);
-                } else {
-                    running = false;
-                    Toast.makeText(this, "Not Match,Game over", Toast.LENGTH_SHORT).show();
-                    final MediaPlayer gameOver = MediaPlayer.create(this, R.raw.gameover);
-                    gameOver.start();
-                    play.setTag(1);
-                    play.setText("play");
-                    score.setText("");
-                    arrayListXvALUE.clear();
+            if (arrayListXvALUE.equals(userChoiceList)) {
+
+                Toast.makeText(this, "Great job , Next level: " + (userChoiceList.size() + 1), Toast.LENGTH_SHORT).show();
+                score.setText("" + userChoiceList.size());
+                level.setText("Level " + (userChoiceList.size() + 1));
+                running = true;
+                if(Integer.parseInt(bestScore.getText().toString())<userChoiceList.size()) {
+                    editor.putString("best_score", (String.valueOf(userChoiceList.size()))).commit();
+                    bestScore.setText(String.valueOf(userChoiceList.size()));
                 }
+
+                simon(view);
+            } else {
+                quiteGame();
             }
         }
+
+    }
+
+    private void quiteGame() {
+        running = false;
+        Toast.makeText(this, "Game Over Yeah\n(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧!", Toast.LENGTH_LONG).show();
+        gameOver.start();
+        play.setTag(1);
+        play.setText("play");
+        score.setText("");
+
+        arrayListXvALUE.clear();
+    }
+
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putString("scoreNow",score.getText().toString());
-        outState.putString("arrayListXvALUENOw",""+arrayListXvALUE.size());
+        outState.putString("scoreNow", score.getText().toString());
+        outState.putString("arrayListXvALUENOw", "" + arrayListXvALUE.size());
         super.onSaveInstanceState(outState);
     }
-    }
+}
