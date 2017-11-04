@@ -28,23 +28,24 @@
 
         <TextView
             android:id="@+id/level"
-            android:layout_width="100dp"
+            android:layout_width="130dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
             android:layout_margin="17dp"
             android:gravity="center"
+            android:text="YOUR TURN"
             android:textColor="@color/colorPrimary"
-            android:textSize="15sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/bestscore"
             android:layout_width="0dp"
             android:layout_height="40dp"
-            android:gravity="center"
             android:layout_gravity="center"
-            android:layout_margin="17dp"
             android:hint="best score"
+            android:gravity="center"
+            android:layout_margin="17dp"
             android:layout_weight="1"
             android:textColor="@color/black"
             android:background="@color/white" />
@@ -59,21 +60,21 @@
         <ImageButton
             android:id="@+id/green"
             android:layout_width="0dp"
-            android:layout_height="150dp"
+            android:layout_height="70dp"
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:onClick="clickCheck"
-            android:src="@drawable/green"
+            android:src="@drawable/greensec"
             android:visibility="visible" />
 
         <ImageButton
             android:id="@+id/red"
             android:layout_width="0dp"
-            android:layout_height="150dp"
+            android:layout_height="70dp"
             android:layout_marginRight="10dp"
             android:layout_weight="1"
             android:onClick="clickCheck"
-            android:src="@drawable/red" />
+            android:src="@drawable/redsec" />
     </LinearLayout>
 
     <LinearLayout
@@ -85,26 +86,26 @@
         <ImageButton
             android:id="@+id/blue"
             android:layout_width="0dp"
-            android:layout_height="150dp"
+            android:layout_height="70dp"
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:onClick="clickCheck"
-            android:src="@drawable/blue" />
+            android:src="@drawable/bluesec" />
 
         <ImageButton
             android:id="@+id/yellow"
             android:layout_width="0dp"
-            android:layout_height="150dp"
+            android:layout_height="70dp"
             android:layout_marginRight="10dp"
             android:layout_weight="1"
             android:onClick="clickCheck"
-            android:src="@drawable/yellow" />
+            android:src="@drawable/yellowsec" />
     </LinearLayout>
 
     <Button
         android:id="@+id/play"
         android:layout_width="200dp"
-        android:layout_height="60dp"
+        android:layout_height="40dp"
         android:layout_gravity="center"
         android:layout_marginBottom="20dp"
         android:layout_marginTop="20dp"
