@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,9 +17,10 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button red, blue, green, yellow, play;
+    private Button play;
+    private ImageButton red, blue, green, yellow;
     private TextView score, bestScore, level;
-    private Button[] color;
+    private ImageButton[] color;
     private boolean running;
     private int buttonTag;
     private int count = 1;
@@ -32,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setupview();
-        color = new Button[]{red, blue, green, yellow};        //storage the color inside the button
+        color = new ImageButton[]{red, blue, green, yellow};        //storage the color inside the button
         random = new Random();                                 //Generate Random number to access to the color
         arrayListXvALUE = new ArrayList<>();                   //storage the color in the sequence to use them later .
         userChoiceList = new ArrayList<>();                    //storage the user choice to compare later with arryListXValue;
@@ -41,10 +43,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setupview() {
-        red = (Button) findViewById(R.id.red);
-        blue = (Button) findViewById(R.id.blue);
-        green = (Button) findViewById(R.id.green);
-        yellow = (Button) findViewById(R.id.yellow);
+        red = (ImageButton) findViewById(R.id.red);
+        blue = (ImageButton) findViewById(R.id.blue);
+        green = (ImageButton) findViewById(R.id.green);
+        yellow = (ImageButton) findViewById(R.id.yellow);
         score = (TextView) findViewById(R.id.socre);
         bestScore = (TextView) findViewById(R.id.bestscore);
         level = (TextView) findViewById(R.id.level);
