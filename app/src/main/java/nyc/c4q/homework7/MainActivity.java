@@ -14,23 +14,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
     private Button play;
     private ImageButton red, blue, green, yellow;
-    private TextView score, bestScore, level;
-    private ImageButton[] color;
+    private TextView scoreView, bestScore;
+    private Score score;
     private boolean running;
     private int buttonTag;
     private int count = 1;
-    private final String scoreNow = "scoreNow";
-    private final String arrayListKey = "arrayListKey";
-    AlphaAnimation animation = new AlphaAnimation(1f, 0f);
-    Random random;
-    ArrayList<Integer> arrayListXvALUE;
-    ArrayList<Integer> userChoiceList;
+    private static final String KEY_SCORE = "score";
+    private static final String KEY_ARRAY = "arr";
+    private static final String KEY_TEMP_ARRAY = "tempArray";
     private MediaPlayer gameOver;
     private MediaPlayer mpGame;
     private MediaPlayer sound;
@@ -38,47 +37,57 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences.Editor editor;
     String scoreBest = "";
 
+    AlphaAnimation animation = new AlphaAnimation(1f, 0f);
+    Random random;
+
+
+    Queue<Integer> queue = new LinkedList<Integer>();
+    ArrayList<Integer> deletedNum = new ArrayList<>();
+    ArrayList<Integer> temp = new ArrayList<>();
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        int y = score.getValue();
+
+        outState.putInt(KEY_SCORE, y);
+        outState.putIntegerArrayList(KEY_ARRAY, deletedNum);
+        outState.putIntegerArrayList(KEY_TEMP_ARRAY, temp);
+        temp.addAll(queue);
+
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         setupview();
+
         gameOver = MediaPlayer.create(this, R.raw.gameover);
         mpGame = MediaPlayer.create(this, R.raw.game);
         sound = MediaPlayer.create(this, R.raw.sound);
-        color = new ImageButton[]{red, blue, green, yellow};        //storage the color inside the button
-        random = new Random();                                 //Generate Random number to access to the color
-        arrayListXvALUE = new ArrayList<>();                   //storage the color in the sequence to use them later .
-        userChoiceList = new ArrayList<>();                    //storage the user choice to compare later with arryListXValue;
+        random = new Random();
         animation.setDuration(100);
+        score = new Score(0);
 
-        sharedPreferences = getSharedPreferences("simon_values", MODE_PRIVATE); //Acesss
-        editor = sharedPreferences.edit();  //Edit
+        sharedPreferences = getSharedPreferences("simon_values", MODE_PRIVATE);
+        editor = sharedPreferences.edit();
 
-        scoreBest = sharedPreferences.getString("best_score", "0");//call back
+        scoreBest = sharedPreferences.getString("best_score", "0");
         bestScore.setText(scoreBest);
 
-        //to flash the button
         if (savedInstanceState != null) {
 
-            score.setText(savedInstanceState.getString(scoreNow));
-            level.setText(savedInstanceState.getString("level"));
-            arrayListXvALUE = savedInstanceState.getIntegerArrayList(arrayListKey);
+            int savedScore = savedInstanceState.getInt(KEY_SCORE);
+            score.setValue(savedScore);
+            scoreView.setText(savedInstanceState.getString("level" + savedScore));
+            deletedNum = savedInstanceState.getIntegerArrayList(KEY_ARRAY);
+            temp = savedInstanceState.getIntegerArrayList(KEY_TEMP_ARRAY);
+            queue.addAll(temp);
 
         }
-    }
-
-    public void setupview() {
-        red = (ImageButton) findViewById(R.id.red);
-        blue = (ImageButton) findViewById(R.id.blue);
-        green = (ImageButton) findViewById(R.id.green);
-        yellow = (ImageButton) findViewById(R.id.yellow);
-        score = (TextView) findViewById(R.id.socre);
-        bestScore = (TextView) findViewById(R.id.bestscore);
-        level = (TextView) findViewById(R.id.level);
-        play = (Button) findViewById(R.id.play);                //to start play or to stop
-        play.setTag(1);
     }
 
     public void onplay(final View view) {
@@ -86,15 +95,16 @@ public class MainActivity extends AppCompatActivity {
         if (buttonTag == 1) {
             play.setTag(2);
             play.setText("Quit game");
-            level.setText("Level 1");
-            simon();
             clickCheck(view);
-            score.setText("");
+            deletedNum.clear();
+            queue.clear();
+            scoreView.setText("");
+            simon();
         } else if (buttonTag == 2) {
             play.setTag(1);
             play.setText("play");
-            arrayListXvALUE.clear();
-            score.setText("");
+            deletedNum.clear();
+            scoreView.setText("");
             Toast.makeText(getBaseContext(), "Game Finsh: ", Toast.LENGTH_SHORT).show();
         }
     }
@@ -104,11 +114,11 @@ public class MainActivity extends AppCompatActivity {
         running = true;
         Random r = new Random();
         int next = r.nextInt(4);
-        arrayListXvALUE.add(next);
+        queue.add(next);
 
-        for (final Integer light : arrayListXvALUE) {
+        for (Integer light : queue) {
             if (light == 0) {
-
+                count++;
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -117,9 +127,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }, 600 * count);
 
-                count++;
             } else if (light == 1) {
-
+                count++;
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -127,9 +136,9 @@ public class MainActivity extends AppCompatActivity {
                         mpGame.start();
                     }
                 }, 600 * count);
-                count++;
-            } else if (light == 2) {
 
+            } else if (light == 2) {
+                count++;
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -138,9 +147,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }, 600 * count);
 
-                count++;
             } else if (light == 3) {
-
+                count++;
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -149,48 +157,88 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }, 600 * count);
 
-                count++;
             }
 
         }
         count = 1;
         running = false;
-        Log.e("r change after while to", "" + running);
-        userChoiceList.clear();
+//        Log.e("r change after while to", "" + running);
+//        queue.clear();
     }
 
 
     public void clickCheck(View view) {
         switch (view.getId()) {
             case R.id.red:
-                userChoiceList.add(0);
-                sound.start();
-                break;
-            case R.id.blue:
-                userChoiceList.add(1);
-                sound.start();
-                break;
-            case R.id.green:
-                userChoiceList.add(2);
-                sound.start();
-                break;
-            case R.id.yellow:
-                userChoiceList.add(3);
-                sound.start();
-                break;
-        }
-        Log.e("on check bee called", "now");
-        Log.e("userChoiceLIST SIZE IS:", "" + userChoiceList.size());
-        if (arrayListXvALUE.size() == userChoiceList.size()) {
-            if (arrayListXvALUE.equals(userChoiceList)) {
+                int number = addToArrayList(red);
+                if (number != 0) {
+                    Toast.makeText(getApplicationContext(), "You lose!", Toast.LENGTH_LONG).show();
+                    red.startAnimation(animation);
+                } else {
 
-                Toast.makeText(this, "Great job , Next level: " + (userChoiceList.size() + 1), Toast.LENGTH_SHORT).show();
-                score.setText("" + userChoiceList.size());
-                level.setText("Level " + (userChoiceList.size() + 1));
+                    queue.add(0);
+                    red.startAnimation(animation);
+                    sound.start();
+                    startNewRound();
+                    break;
+
+                }
+            case R.id.blue:
+                number = addToArrayList(blue);
+                if (number != 1) {
+
+                    Toast.makeText(getApplicationContext(), "You lose!", Toast.LENGTH_LONG).show();
+                    blue.startAnimation(animation);
+                } else {
+
+                    queue.add(1);
+                    blue.startAnimation(animation);
+                    sound.start();
+                    startNewRound();
+                    break;
+
+                }
+            case R.id.green:
+                number = addToArrayList(green);
+                if (number != 2) {
+                    Toast.makeText(getApplicationContext(), "You lose!", Toast.LENGTH_LONG).show();
+                    green.startAnimation(animation);
+                } else {
+
+                    queue.add(2);
+                    green.startAnimation(animation);
+                    sound.start();
+                    startNewRound();
+                    break;
+
+                }
+
+            case R.id.yellow:
+                number = addToArrayList(yellow);
+                if (number != 3) {
+                    Toast.makeText(getApplicationContext(), "You lose!", Toast.LENGTH_LONG).show();
+                    yellow.startAnimation(animation);
+                } else {
+                    queue.add(3);
+                    yellow.startAnimation(animation);
+                    sound.start();
+                    startNewRound();
+                    break;
+
+                }
+        }
+
+        Log.e("on check bee called", "now");
+        Log.e("userChoiceLIST SIZE IS:", "" + temp.size());
+        if (queue.size() == temp.size()) {
+            if (queue.equals(temp)) {
+
+                Toast.makeText(this, "Great job , Next level: " + (temp.size() + 1), Toast.LENGTH_SHORT).show();
+                scoreView.setText("" + temp.size());
                 running = true;
-                if (Integer.parseInt(bestScore.getText().toString()) < userChoiceList.size()) {
-                    editor.putString("best_score", (String.valueOf(userChoiceList.size()))).commit();
-                    bestScore.setText(String.valueOf(userChoiceList.size()));
+                if (Integer.parseInt(bestScore.getText().toString()) < temp.size()) {
+                    editor.putString("best_score", (String.valueOf(temp.size()))).commit();
+                    bestScore.setText(String.valueOf(temp.size()));
                 }
 
                 simon();
@@ -203,22 +251,42 @@ public class MainActivity extends AppCompatActivity {
 
     private void quiteGame() {
         running = false;
-        Toast.makeText(this, "Game Over Yeah\n(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧Rusi!", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Game Over!", Toast.LENGTH_LONG).show();
         gameOver.start();
         play.setTag(1);
         play.setText("play");
-        score.setText("");
+        scoreView.setText("");
 
-        arrayListXvALUE.clear();
+        queue.clear();
+
+    }
+
+    public int addToArrayList(ImageButton button) {
+        button.startAnimation(animation);
+        int number = queue.poll();
+        deletedNum.add(number);
+        return number;
+    }
+
+    public void startNewRound() {
+        int x = score.getValue() + 1;
+        score.setValue(x);
+        scoreView.setText("level" + x);
+        queue.addAll(deletedNum);
+        deletedNum.clear();
+        simon();
+    }
+
+    public void setupview() {
+        red = (ImageButton) findViewById(R.id.red);
+        blue = (ImageButton) findViewById(R.id.blue);
+        green = (ImageButton) findViewById(R.id.green);
+        yellow = (ImageButton) findViewById(R.id.yellow);
+        scoreView = (TextView) findViewById(R.id.socre_view);
+        bestScore = (TextView) findViewById(R.id.bestscore);
+        play = (Button) findViewById(R.id.play);
+        play.setTag(1);
     }
 
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putString("scoreNow", score.getText().toString());
-        outState.putString("level", level.getText().toString());
-        outState.putIntegerArrayList("arrayListKey", arrayListXvALUE);
-        outState.putIntegerArrayList("userArr", userChoiceList);
-        super.onSaveInstanceState(outState);
-    }
 }
