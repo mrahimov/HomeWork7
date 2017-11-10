@@ -4,26 +4,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/back"
+    android:background="@color/black"
     tools:context="nyc.c4q.homework7.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="0.5"
         android:orientation="horizontal">
 
         <TextView
             android:id="@+id/socre_view"
             android:layout_width="0dp"
             android:layout_height="36dp"
-            android:layout_gravity="center"
             android:layout_margin="17dp"
             android:layout_weight="1"
-            android:background="@color/white"
+            android:background="@color/black"
             android:gravity="center"
             android:hint="score"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="15sp" />
 
         <TextView
@@ -42,70 +41,75 @@
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:gravity="center"
-            android:layout_gravity="center"
             android:layout_margin="17dp"
-            android:hint="best score"
             android:layout_weight="1"
-            android:textColor="@color/black"
-            android:background="@color/white" />
+            android:textColor="@color/white"
+            android:background="@color/black" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1.3"
+        android:layout_height="2dp"
+        android:layout_weight="1.6"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="10dp"
         android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/green"
             android:layout_width="0dp"
-            android:layout_height="150dp"
-            android:layout_marginLeft="10dp"
+            android:layout_height="180dp"
+            android:layout_marginLeft="1dp"
             android:layout_weight="1"
-            android:src="@drawable/green"
+            android:background="@color/black"
+            android:src="@drawable/usa"
             android:visibility="visible" />
 
         <ImageButton
             android:id="@+id/red"
             android:layout_width="0dp"
-            android:layout_height="150dp"
-            android:layout_marginRight="10dp"
+            android:layout_height="180dp"
+            android:layout_marginRight="1dp"
+            android:background="@color/black"
             android:layout_weight="1"
-            android:src="@drawable/red" />
+            android:src="@drawable/russia" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1.3"
+        android:layout_weight="1.6"
+        android:layout_marginHorizontal="10dp"
         android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/blue"
             android:layout_width="0dp"
-            android:layout_height="150dp"
-            android:layout_marginLeft="10dp"
+            android:layout_height="180dp"
+            android:background="@color/black"
+            android:layout_marginLeft="1dp"
             android:layout_weight="1"
-            android:src="@drawable/blue" />
+            android:src="@drawable/pakistan" />
 
         <ImageButton
             android:id="@+id/yellow"
             android:layout_width="0dp"
-            android:layout_height="150dp"
-            android:layout_marginRight="10dp"
+            android:layout_height="180dp"
+            android:background="@color/black"
+            android:layout_marginRight="1dp"
             android:layout_weight="1"
-            android:src="@drawable/yellow" />
+            android:src="@drawable/japan" />
     </LinearLayout>
 
     <Button
         android:id="@+id/play"
         android:layout_width="200dp"
-        android:layout_height="60dp"
+        android:layout_height="40dp"
         android:layout_gravity="center"
         android:layout_marginBottom="20dp"
         android:layout_marginTop="20dp"
         android:checked="false"
-        android:background="@color/white"
+        android:background="@color/play"
         android:text="play"
         android:textSize="30dp" />
 </LinearLayout>

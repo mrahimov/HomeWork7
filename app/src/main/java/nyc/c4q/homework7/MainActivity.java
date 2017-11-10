@@ -59,10 +59,12 @@ public class MainActivity extends AppCompatActivity {
         levelView = (TextView) findViewById(R.id.socre_view);
         bestScoreView = (TextView) findViewById(R.id.bestscore);
         animation.setDuration(80);
-        bestScoreView.setText(String.valueOf(retrieveBestScore()));
-        gameOver = MediaPlayer.create(this, R.raw.gameover);
+        bestScoreView.setText(String.valueOf("best: " + retrieveBestScore()));
+
+        gameOver = MediaPlayer.create(this, R.raw.smb);
         mpGame = MediaPlayer.create(this, R.raw.game);
         sound = MediaPlayer.create(this, R.raw.sound);
+
         if (savedInstanceState != null) {
             score = savedInstanceState.getParcelable(KEY);
             levelView.setText("SCORE" + score.getValue());
