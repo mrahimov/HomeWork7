@@ -104,6 +104,10 @@ public class MainActivity extends AppCompatActivity {
         running = true;
         Random r = new Random();
         int next = r.nextInt(4);
+        red.setEnabled(false);
+        blue.setEnabled(false);
+        yellow.setEnabled(false);
+        green.setEnabled(false);
         arrayListXvALUE.add(next);
 
         for (final Integer light : arrayListXvALUE) {
@@ -157,6 +161,10 @@ public class MainActivity extends AppCompatActivity {
         running = false;
         Log.e("r change after while to", "" + running);
         userChoiceList.clear();
+        red.setEnabled(true);
+        blue.setEnabled(true);
+        yellow.setEnabled(true);
+        green.setEnabled(true);
     }
 
 
@@ -203,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void quiteGame() {
         running = false;
-        Toast.makeText(this, "Game Over Yeah\n(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧Rusi!", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Game Over Yeah\n(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧!", Toast.LENGTH_LONG).show();
         gameOver.start();
         play.setTag(1);
         play.setText("play");
