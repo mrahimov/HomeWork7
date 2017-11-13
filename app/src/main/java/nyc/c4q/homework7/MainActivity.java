@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
     String scoreBest = "";
+    private boolean buttonVisibility;
 
 
     @Override
@@ -87,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
             play.setTag(2);
             play.setText("Quit game");
             level.setText("Level 1");
+            buttonVisibility=true;
             simon();
             clickCheck(view);
             score.setText("");
@@ -105,13 +107,35 @@ public class MainActivity extends AppCompatActivity {
         Random r = new Random();
         int next = r.nextInt(4);
         arrayListXvALUE.add(next);
+        demoPlay();
+        Log.e("r change after while to", "" + running);
+        userChoiceList.clear();
+        red.setEnabled(true);
+        blue.setEnabled(true);
+        yellow.setEnabled(true);
+        green.setEnabled(true);
+    }
 
+    private void demoPlay() {
+        red.setEnabled(false);
+        blue.setEnabled(false);
+        yellow.setEnabled(false);
+        green.setEnabled(false);
+
+        if(buttonVisibility==false) {
+            red.setVisibility(View.INVISIBLE);
+            blue.setVisibility(View.INVISIBLE);
+            yellow.setVisibility(View.INVISIBLE);
+            green.setVisibility(View.INVISIBLE);
+            count=3;
+        }
         for (final Integer light : arrayListXvALUE) {
             if (light == 0) {
 
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        red.setVisibility(View.VISIBLE);
                         red.startAnimation(animation);
                         mpGame.start();
                     }
@@ -123,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        blue.setVisibility(View.VISIBLE);
                         blue.startAnimation(animation);
                         mpGame.start();
                     }
@@ -133,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        green.setVisibility(View.VISIBLE);
                         green.startAnimation(animation);
                         mpGame.start();
                     }
@@ -144,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        yellow.setVisibility(View.VISIBLE);
                         yellow.startAnimation(animation);
                         mpGame.start();
                     }
@@ -155,8 +182,6 @@ public class MainActivity extends AppCompatActivity {
         }
         count = 1;
         running = false;
-        Log.e("r change after while to", "" + running);
-        userChoiceList.clear();
     }
 
 
@@ -203,8 +228,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void quiteGame() {
         running = false;
-        Toast.makeText(this, "Game Over Yeah\n(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧Rusi!", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Game Over Yeah\n(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧!", Toast.LENGTH_LONG).show();
         gameOver.start();
+        Toast.makeText(this,"The correct Sequence was: ",Toast.LENGTH_LONG).show();
+        buttonVisibility=false;
+        demoPlay();
         play.setTag(1);
         play.setText("play");
         score.setText("");
